@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140610223023) do
+ActiveRecord::Schema.define(version: 20140611183614) do
 
   create_table "dogs", force: true do |t|
     t.datetime "created_at"
@@ -47,7 +47,7 @@ ActiveRecord::Schema.define(version: 20140610223023) do
     t.boolean  "flag_1"
     t.boolean  "flag_2"
     t.integer  "walker_id"
-    t.integer  "dogs_id"
+    t.integer  "dog_id"
   end
 
 end

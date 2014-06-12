@@ -1,0 +1,533 @@
+[33mcommit ed78616242e0550bdb1e1228864567e95485b790[m
+Author: Doug Helferich <dhelf17@gmail.com>
+Date:   Wed Jun 11 10:30:13 2014 -0400
+
+    updated schema
+
+[1mdiff --git a/Gemfile b/Gemfile[m
+[1mindex 292c232..b775ea4 100644[m
+[1m--- a/Gemfile[m
+[1m+++ b/Gemfile[m
+[36m@@ -1,5 +1,7 @@[m
+ source 'https://rubygems.org'[m
+ [m
+[32m+[m[32mgem 'devise'[m
+[32m+[m
+ # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'[m
+ gem 'rails', '4.0.2'[m
+ [m
+[1mdiff --git a/Gemfile.lock b/Gemfile.lock[m
+[1mindex 99b8bdc..00d00ae 100644[m
+[1m--- a/Gemfile.lock[m
+[1m+++ b/Gemfile.lock[m
+[36m@@ -26,6 +26,7 @@[m [mGEM[m
+       thread_safe (~> 0.1)[m
+       tzinfo (~> 0.3.37)[m
+     arel (4.0.2)[m
+[32m+[m[32m    bcrypt (3.1.7-x86-mingw32)[m
+     builder (3.1.4)[m
+     coffee-rails (4.0.1)[m
+       coffee-script (>= 2.2.0)[m
+[36m@@ -34,6 +35,12 @@[m [mGEM[m
+       coffee-script-source[m
+       execjs[m
+     coffee-script-source (1.7.0)[m
+[32m+[m[32m    devise (3.2.4)[m
+[32m+[m[32m      bcrypt (~> 3.0)[m
+[32m+[m[32m      orm_adapter (~> 0.1)[m
+[32m+[m[32m      railties (>= 3.2.6, < 5)[m
+[32m+[m[32m      thread_safe (~> 0.1)[m
+[32m+[m[32m      warden (~> 1.2.3)[m
+     erubis (2.7.0)[m
+     execjs (2.2.0)[m
+     hike (1.2.3)[m
+[36m@@ -51,6 +58,7 @@[m [mGEM[m
+     mime-types (1.25.1)[m
+     minitest (4.7.5)[m
+     multi_json (1.10.1)[m
+[32m+[m[32m    orm_adapter (0.5.0)[m
+     polyglot (0.3.5)[m
+     rack (1.5.2)[m
+     rack-test (0.6.2)[m
+[36m@@ -102,12 +110,15 @@[m [mGEM[m
+     uglifier (2.5.0)[m
+       execjs (>= 0.3.0)[m
+       json (>= 1.8.0)[m
+[32m+[m[32m    warden (1.2.3)[m
+[32m+[m[32m      rack (>= 1.0)[m
+ [m
+ PLATFORMS[m
+   x86-mingw32[m
+ [m
+ DEPENDENCIES[m
+   coffee-rails (~> 4.0.0)[m
+[32m+[m[32m  devise[m
+   jbuilder (~> 1.2)[m
+   jquery-rails[m
+   rails (= 4.0.2)[m
+[1mdiff --git a/app/models/walker.rb b/app/models/walker.rb[m
+[1mnew file mode 100644[m
+[1mindex 0000000..b790ed2[m
+[1m--- /dev/null[m
+[1m+++ b/app/models/walker.rb[m
+[36m@@ -0,0 +1,6 @@[m
+[32m+[m[32mclass Walker < ActiveRecord::Base[m
+[32m+[m[32m  # Include default devise modules. Others available are:[m
+[32m+[m[32m  # :confirmable, :lockable, :timeoutable and :omniauthable[m
+[32m+[m[32m  devise :database_authenticatable, :registerable,[m
+[32m+[m[32m         :recoverable, :rememberable, :trackable, :validatable[m
+[32m+[m[32mend[m
+[1mdiff --git a/app/views/devise/confirmations/new.html.erb b/app/views/devise/confirmations/new.html.erb[m
+[1mnew file mode 100644[m
+[1mindex 0000000..65ba288[m
+[1m--- /dev/null[m
+[1m+++ b/app/views/devise/confirmations/new.html.erb[m
+[36m@@ -0,0 +1,12 @@[m
+[32m+[m[32m<h2>Resend confirmation instructions</h2>[m
+[32m+[m
+[32m+[m[32m<%= form_for(resource, as: resource_name, url: confirmation_path(resource_name), html: { method: :post }) do |f| %>[m
+[32m+[m[32m  <%= devise_error_messages! %>[m
+[32m+[m
+[32m+[m[32m  <div><%= f.label :email %><br />[m
+[32m+[m[32m  <%= f.email_field :email, autofocus: true %></div>[m
+[32m+[m
+[32m+[m[32m  <div><%= f.submit "Resend confirmation instructions" %></div>[m
+[32m+[m[32m<% end %>[m
+[32m+[m
+[32m+[m[32m<%= render "devise/shared/links" %>[m
+[1mdiff --git a/app/views/devise/mailer/confirmation_instructions.html.erb b/app/views/devise/mailer/confirmation_instructions.html.erb[m
+[1mnew file mode 100644[m
+[1mindex 0000000..dc55f64[m
+[1m--- /dev/null[m
+[1m+++ b/app/views/devise/mailer/confirmation_instructions.html.erb[m
+[36m@@ -0,0 +1,5 @@[m
+[32m+[m[32m<p>Welcome <%= @email %>!</p>[m
+[32m+[m
+[32m+[m[32m<p>You can confirm your account email through the link below:</p>[m
+[32m+[m
+[32m+[m[32m<p><%= link_to 'Confirm my account', confirmation_url(@resource, confirmation_token: @token) %></p>[m
+[1mdiff --git a/app/views/devise/mailer/reset_password_instructions.html.erb b/app/views/devise/mailer/reset_password_instructions.html.erb[m
+[1mnew file mode 100644[m
+[1mindex 0000000..f667dc1[m
+[1m--- /dev/null[m
+[1m+++ b/app/views/devise/mailer/reset_password_instructions.html.erb[m
+[36m@@ -0,0 +1,8 @@[m
+[32m+[m[32m<p>Hello <%= @resource.email %>!</p>[m
+[32m+[m
+[32m+[m[32m<p>Someone has requested a link to change your password. You can do this through the link below.</p>[m
+[32m+[m
+[32m+[m[32m<p><%= link_to 'Change my password', edit_password_url(@resource, reset_password_token: @token) %></p>[m
+[32m+[m
+[32m+[m[32m<p>If you didn't request this, please ignore this email.</p>[m
+[32m+[m[32m<p>Your password won't change until you access the link above and create a new one.</p>[m
+[1mdiff --git a/app/views/devise/mailer/unlock_instructions.html.erb b/app/views/devise/mailer/unlock_instructions.html.erb[m
+[1mnew file mode 100644[m
+[1mindex 0000000..41e148b[m
+[1m--- /dev/null[m
+[1m+++ b/app/views/devise/mailer/unlock_instructions.html.erb[m
+[36m@@ -0,0 +1,7 @@[m
+[32m+[m[32m<p>Hello <%= @resource.email %>!</p>[m
+[32m+[m
+[32m+[m[32m<p>Your account has been locked due to an excessive number of unsuccessful sign in attempts.</p>[m
+[32m+[m
+[32m+[m[32m<p>Click the link below to unlock your account:</p>[m
+[32m+[m
+[32m+[m[32m<p><%= link_to 'Unlock my account', unlock_url(@resource, unlock_token: @token) %></p>[m
+[1mdiff --git a/app/views/devise/passwords/edit.html.erb b/app/views/devise/passwords/edit.html.erb[m
+[1mnew file mode 100644[m
+[1mindex 0000000..5535098[m
+[1m--- /dev/null[m
+[1m+++ b/app/views/devise/passwords/edit.html.erb[m
+[36m@@ -0,0 +1,16 @@[m
+[32m+[m[32m<h2>Change your password</h2>[m
+[32m+[m
+[32m+[m[32m<%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put }) do |f| %>[m
+[32m+[m[32m  <%= devise_error_messages! %>[m
+[32m+[m[32m  <%= f.hidden_field :reset_password_token %>[m
+[32m+[m
+[32m+[m[32m  <div><%= f.label :password, "New password" %><br />[m
+[32m+[m[32m    <%= f.password_field :password, autofocus: true, autocomplete: "off" %></div>[m
+[32m+[m
+[32m+[m[32m  <div><%= f.label :password_confirmation, "Confirm new password" %><br />[m
+[32m+[m[32m    <%= f.password_field :password_confirmation, autocomplete: "off" %></div>[m
+[32m+[m
+[32m+[m[32m  <div><%= f.submit "Change my password" %></div>[m
+[32m+[m[32m<% end %>[m
+[32m+[m
+[32m+[m[32m<%= render "devise/shared/links" %>[m
+[1mdiff --git a/app/views/devise/passwords/new.html.erb b/app/views/devise/passwords/new.html.erb[m
+[1mnew file mode 100644[m
+[1mindex 0000000..ea1d46e[m
+[1m--- /dev/null[m
+[1m+++ b/app/views/devise/passwords/new.html.erb[m
+[36m@@ -0,0 +1,12 @@[m
+[32m+[m[32m<h2>Forgot your password?</h2>[m
+[32m+[m
+[32m+[m[32m<%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f| %>[m
+[32m+[m[32m  <%= devise_error_messages! %>[m
+[32m+[m
+[32m+[m[32m  <div><%= f.label :email %><br />[m
+[32m+[m[32m  <%= f.email_field :email, autofocus: true %></div>[m
+[32m+[m
+[32m+[m[32m  <div><%= f.submit "Send me reset password instructions" %></div>[m
+[32m+[m[32m<% end %>[m
+[32m+[m
+[32m+[m[32m<%= render "devise/shared/links" %>[m
+[1mdiff --git a/app/views/devise/registrations/edit.html.erb b/app/views/devise/registrations/edit.html.erb[m
+[1mnew file mode 100644[m
+[1mindex 0000000..808d62c[m
+[1m--- /dev/null[m
+[1m+++ b/app/views/devise/registrations/edit.html.erb[m
+[36m@@ -0,0 +1,29 @@[m
+[32m+[m[32m<h2>Edit <%= resource_name.to_s.humanize %></h2>[m
+[32m+[m
+[32m+[m[32m<%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>[m
+[32m+[m[32m  <%= devise_error_messages! %>[m
+[32m+[m
+[32m+[m[32m  <div><%= f.label :email %><br />[m
+[32m+[m[32m  <%= f.email_field :email, autofocus: true %></div>[m
+[32m+[m
+[32m+[m[32m  <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>[m
+[32m+[m[32m    <div>Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>[m
+[32m+[m[32m  <% end %>[m
+[32m+[m
+[32m+[m[32m  <div><%= f.label :password %> <i>(leave blank if you don't want to change it)</i><br />[m
+[32m+[m[32m    <%= f.password_field :password, autocomplete: "off" %></div>[m
+[32m+[m
+[32m+[m[32m  <div><%= f.label :password_confirmation %><br />[m
+[32m+[m[32m    <%= f.password_field :password_confirmation, autocomplete: "off" %></div>[m
+[32m+[m
+[32m+[m[32m  <div><%= f.label :current_password %> <i>(we need your current password to confirm your changes)</i><br />[m
+[32m+[m[32m    <%= f.password_field :current_password, autocomplete: "off" %></div>[m
+[32m+[m
+[32m+[m[32m  <div><%= f.submit "Update" %></div>[m
+[32m+[m[32m<% end %>[m
+[32m+[m
+[32m+[m[32m<h3>Cancel my account</h3>[m
+[32m+[m
+[32m+[m[32m<p>Unhappy? <%= button_to "Cancel my account", registration_path(resource_name), data: { confirm: "Are you sure?" }, method: :delete %></p>[m
+[32m+[m
+[32m+[m[32m<%= link_to "Back", :back %>[m
+[1mdiff --git a/app/views/devise/registrations/new.html.erb b/app/views/devise/registrations/new.html.erb[m
+[1mnew file mode 100644[m
+[1mindex 0000000..234de91[m
+[1m--- /dev/null[m
+[1m+++ b/app/views/devise/registrations/new.html.erb[m
+[36m@@ -0,0 +1,18 @@[m
+[32m+[m[32m<h2>Sign up</h2>[m
+[32m+[m
+[32m+[m[32m<%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>[m
+[32m+[m[32m  <%= devise_error_messages! %>[m
+[32m+[m
+[32m+[m[32m  <div><%= f.label :email %><br />[m
+[32m+[m[32m  <%= f.email_field :email, autofocus: true %></div>[m
+[32m+[m
+[32m+[m[32m  <div><%= f.label :password %><br />[m
+[32m+[m[32m    <%= f.password_field :password, autocomplete: "off" %></div>[m
+[32m+[m
+[32m+[m[32m  <div><%= f.label :password_confirmation %><br />[m
+[32m+[m[32m    <%= f.password_field :password_confirmation, autocomplete: "off" %></div>[m
+[32m+[m
+[32m+[m[32m  <div><%= f.submit "Sign up" %></div>[m
+[32m+[m[32m<% end %>[m
+[32m+[m
+[32m+[m[32m<%= render "devise/shared/links" %>[m
+[1mdiff --git a/app/views/devise/sessions/new.html.erb b/app/views/devise/sessions/new.html.erb[m
+[1mnew file mode 100644[m
+[1mindex 0000000..f151ac1[m
+[1m--- /dev/null[m
+[1m+++ b/app/views/devise/sessions/new.html.erb[m
+[36m@@ -0,0 +1,17 @@[m
+[32m+[m[32m<h2>Sign in</h2>[m
+[32m+[m
+[32m+[m[32m<%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>[m
+[32m+[m[32m  <div><%= f.label :email %><br />[m
+[32m+[m[32m  <%= f.email_field :email, autofocus: true %></div>[m
+[32m+[m
+[32m+[m[32m  <div><%= f.label :password %><br />[m
+[32m+[m[32m    <%= f.password_field :password, autocomplete: "off" %></div>[m
+[32m+[m
+[32m+[m[32m  <% if devise_mapping.rememberable? -%>[m
+[32m+[m[32m    <div><%= f.check_box :remember_me %> <%= f.label :remember_me %></div>[m
+[32m+[m[32m  <% end -%>[m
+[32m+[m
+[32m+[m[32m  <div><%= f.submit "Sign in" %></div>[m
+[32m+[m[32m<% end %>[m
+[32m+[m
+[32m+[m[32m<%= render "devise/shared/links" %>[m
+[1mdiff --git a/app/views/devise/shared/_links.erb b/app/views/devise/shared/_links.erb[m
+[1mnew file mode 100644[m
+[1mindex 0000000..d84bdde[m
+[1m--- /dev/null[m
+[1m+++ b/app/views/devise/shared/_links.erb[m
+[36m@@ -0,0 +1,25 @@[m
+[32m+[m[32m<%- if controller_name != 'sessions' %>[m
+[32m+[m[32m  <%= link_to "Sign in", new_session_path(resource_name) %><br />[m
+[32m+[m[32m<% end -%>[m
+[32m+[m
+[32m+[m[32m<%- if devise_mapping.registerable? && controller_name != 'registrations' %>[m
+[32m+[m[32m  <%= link_to "Sign up", new_registration_path(resource_name) %><br />[m
+[32m+[m[32m<% end -%>[m
+[32m+[m
+[32m+[m[32m<%- if devise_mapping.recoverable? && controller_name != 'passwords' && controller_name != 'registrations' %>[m
+[32m+[m[32m  <%= link_to "Forgot your password?", new_password_path(resource_name) %><br />[m
+[32m+[m[32m<% end -%>[m
+[32m+[m
+[32m+[m[32m<%- if devise_mapping.confirmable? && controller_name != 'confirmations' %>[m
+[32m+[m[32m  <%= link_to "Didn't receive confirmation instructions?", new_confirmation_path(resource_name) %><br />[m
+[32m+[m[32m<% end -%>[m
+[32m+[m
+[32m+[m[32m<%- if devise_mapping.lockable? && resource_class.unlock_strategy_enabled?(:email) && controller_name != 'unlocks' %>[m
+[32m+[m[32m  <%= link_to "Didn't receive unlock instructions?", new_unlock_path(resource_name) %><br />[m
+[32m+[m[32m<% end -%>[m
+[32m+[m
+[32m+[m[32m<%- if devise_mapping.omniauthable? %>[m
+[32m+[m[32m  <%- resource_class.omniauth_providers.each do |provider| %>[m
+[32m+[m[32m    <%= link_to "Sign in with #{provider.to_s.titleize}", omniauth_authorize_path(resource_name, provider) %><br />[m
+[32m+[m[32m  <% end -%>[m
+[32m+[m[32m<% end -%>[m
+[1mdiff --git a/app/views/devise/unlocks/new.html.erb b/app/views/devise/unlocks/new.html.erb[m
+[1mnew file mode 100644[m
+[1mindex 0000000..6fb5612[m
+[1m--- /dev/null[m
+[1m+++ b/app/views/devise/unlocks/new.html.erb[m
+[36m@@ -0,0 +1,12 @@[m
+[32m+[m[32m<h2>Resend unlock instructions</h2>[m
+[32m+[m
+[32m+[m[32m<%= form_for(resource, as: resource_name, url: unlock_path(resource_name), html: { method: :post }) do |f| %>[m
+[32m+[m[32m  <%= devise_error_messages! %>[m
+[32m+[m
+[32m+[m[32m  <div><%= f.label :email %><br />[m
+[32m+[m[32m  <%= f.email_field :email, autofocus: true %></div>[m
+[32m+[m
+[32m+[m[32m  <div><%= f.submit "Resend unlock instructions" %></div>[m
+[32m+[m[32m<% end %>[m
+[32m+[m
+[32m+[m[32m<%= render "devise/shared/links" %>[m
+[1mdiff --git a/config/initializers/devise.rb b/config/initializers/devise.rb[m
+[1mnew file mode 100644[m
+[1mindex 0000000..d8090d6[m
+[1m--- /dev/null[m
+[1m+++ b/config/initializers/devise.rb[m
+[36m@@ -0,0 +1,256 @@[m
+[32m+[m[32m# Use this hook to configure devise mailer, warden hooks and so forth.[m
+[32m+[m[32m# Many of these configuration options can be set straight in your model.[m
+[32m+[m[32mDevise.setup do |config|[m
+[32m+[m[32m  # The secret key used by Devise. Devise uses this key to generate[m
+[32m+[m[32m  # random tokens. Changing this key will render invalid all existing[m
+[32m+[m[32m  # confirmation, reset password and unlock tokens in the database.[m
+[32m+[m[32m  # config.secret_key = '5d8aee2461053ef975335b163edd717c40bb130622001e7b1486f9e7492a8d640215349ac772afd60d62c9ac225fda4da82ed030ea8721e326cff3b51d3761b8'[m
+[32m+[m
+[32m+[m[32m  # ==> Mailer Configuration[m
+[32m+[m[32m  # Configure the e-mail address which will be shown in Devise::Mailer,[m
+[32m+[m[32m  # note that it will be overwritten if you use your own mailer class[m
+[32m+[m[32m  # with default "from" parameter.[m
+[32m+[m[32m  config.mailer_sender = 'please-change-me-at-config-initializers-devise@example.com'[m
+[32m+[m
+[32m+[m[32m  # Configure the class responsible to send e-mails.[m
+[32m+[m[32m  # config.mailer = 'Devise::Mailer'[m
+[32m+[m
+[32m+[m[32m  # ==> ORM configuration[m
+[32m+[m[32m  # Load and configure the ORM. Supports :active_record (default) and[m
+[32m+[m[32m  # :mongoid (bson_ext recommended) by default. Other ORMs may be[m
+[32m+[m[32m  # available as additional gems.[m
+[32m+[m[32m  require 'devise/orm/active_record'[m
+[32m+[m
+[32m+[m[32m  # ==> Configuration for any authentication mechanism[m
+[32m+[m[32m  # Configure which keys are used when authenticating a user. The default is[m
+[32m+[m[32m  # just :email. You can configure it to use [:username, :subdomain], so for[m
+[32m+[m[32m  # authenticating a user, both parameters are required. Remember that those[m
+[32m+[m[32m  # parameters are used only when authenticating and not when retrieving from[m
+[32m+[m[32m  # session. If you need permissions, you should implement that in a before filter.[m
+[32m+[m[32m  # You can also supply a hash where the value is a boolean determining whether[m
+[32m+[m[32m  # or not authentication should be aborted when the value is not present.[m
+[32m+[m[32m  # config.authentication_keys = [ :email ][m
+[32m+[m
+[32m+[m[32m  # Configure parameters from the request object used for authentication. Each entry[m
+[32m+[m[32m  # given should be a request method and it will automatically be passed to the[m
+[32m+[m[32m  # find_for_authentication method and considered in your model lookup. For instance,[m
+[32m+[m[32m  # if you set :request_keys to [:subdomain], :subdomain will be used on authentication.[m
+[32m+[m[32m  # The same considerations mentioned for authentication_keys also apply to request_keys.[m
+[32m+[m[32m  # config.request_keys = [][m
+[32m+[m
+[32m+[m[32m  # Configure which authentication keys should be case-insensitive.[m
+[32m+[m[32m  # These keys will be downcased upon creating or modifying a user and when used[m
+[32m+[m[32m  # to authenticate or find a user. Default is :email.[m
+[32m+[m[32m  config.case_insensitive_keys = [ :email ][m
+[32m+[m
+[32m+[m[32m  # Configure which authentication keys should have whitespace stripped.[m
+[32m+[m[32m  # These keys will have whitespace before and after removed upon creating or[m
+[32m+[m[32m  # modifying a user and when used to authenticate or find a user. Default is :email.[m
+[32m+[m[32m  config.strip_whitespace_keys = [ :email ][m
+[32m+[m
+[32m+[m[32m  # Tell if authentication through request.params is enabled. True by default.[m
+[32m+[m[32m  # It can be set to an array that will enable params authentication only for the[m
+[32m+[m[32m  # given strategies, for example, `config.params_authenticatable = [:database]` will[m
+[32m+[m[32m  # enable it only for database (email + password) authentication.[m
+[32m+[m[32m  # config.params_authenticatable = true[m
+[32m+[m
+[32m+[m[32m  # Tell if authentication through HTTP Auth is enabled. False by default.[m
+[32m+[m[32m  # It can be set to an array that will enable http authentication only for the[m
+[32m+[m[32m  # given strategies, for example, `config.http_authenticatable = [:database]` will[m
+[32m+[m[32m  # enable it only for database authentication. The supported strategies are:[m
+[32m+[m[32m  # :database      = Support basic authentication with authentication key + password[m
+[32m+[m[32m  # config.http_authenticatable = false[m
+[32m+[m
+[32m+[m[32m  # If http headers should be returned for AJAX requests. True by default.[m
+[32m+[m[32m  # config.http_authenticatable_on_xhr = true[m
+[32m+[m
+[32m+[m[32m  # The realm used in Http Basic Authentication. 'Application' by default.[m
+[32m+[m[32m  # config.http_authentication_realm = 'Application'[m
+[32m+[m
+[32m+[m[32m  # It will change confirmation, password recovery and other workflows[m
+[32m+[m[32m  # to behave the same regardless if the e-mail provided was right or wrong.[m
+[32m+[m[32m  # Does not affect registerable.[m
+[32m+[m[32m  # config.paranoid = true[m
+[32m+[m
+[32m+[m[32m  # By default Devise will store the user in session. You can skip storage for[m
+[32m+[m[32m  # particular strategies by setting this option.[m
+[32m+[m[32m  # Notice that if you are skipping storage for all authentication paths, you[m
+[32m+[m[32m  # may want to disable generating routes to Devise's sessions controller by[m
+[32m+[m[32m  # passing skip: :sessions to `devise_for` in your config/routes.rb[m
+[32m+[m[32m  config.skip_session_storage = [:http_auth][m
+[32m+[m
+[32m+[m[32m  # By default, Devise cleans up the CSRF token on authentication to[m
+[32m+[m[32m  # avoid CSRF token fixation attacks. This means that, when using AJAX[m
+[32m+[m[32m  # requests for sign in and sign up, you need to get a new CSRF token[m
+[32m+[m[32m  # from the server. You can disable this option at your own risk.[m
+[32m+[m[32m  # config.clean_up_csrf_token_on_authentication = true[m
+[32m+[m
+[32m+[m[32m  # ==> Configuration for :database_authenticatable[m
+[32m+[m[32m  # For bcrypt, this is the cost for hashing the password and defaults to 10. If[m
+[32m+[m[32m  # using other encryptors, it sets how many times you want the password re-encrypted.[m
+[32m+[m[32m  #[m
+[32m+[m[32m  # Limiting the stretches to just one in testing will increase the performance of[m
+[32m+[m[32m  # your test suite dramatically. However, it is STRONGLY RECOMMENDED to not use[m
+[32m+[m[32m  # a value less than 10 in other environments. Note that, for bcrypt (the default[m
+[32m+[m[32m  # encryptor), the cost increases exponentially with the number of stretches (e.g.[m
+[32m+[m[32m  # a value of 20 is already extremely slow: approx. 60 seconds for 1 calculation).[m
+[32m+[m[32m  config.stretches = Rails.env.test? ? 1 : 10[m
+[32m+[m
+[32m+[m[32m  # Setup a pepper to generate the encrypted password.[m
+[32m+[m[32m  # config.pepper = 'e3d03978a527443becae70212ab6e313edfcebbc8b0b22b8ab1b0fd7b2172eb022170d9a9dc8ec5e9ad04f456d5684fc15961c91e48135def827c0e7cd8c7a58'[m
+[32m+[m
+[32m+[m[32m  # ==> Configuration for :confirmable[m
+[32m+[m[32m  # A period that the user is allowed to access the website even without[m
+[32m+[m[32m  # confirming their account. For instance, if set to 2.days, the user will be[m
+[32m+[m[32m  # able to access the website for two days without confirming their account,[m
+[32m+[m[32m  # access will be blocked just in the third day. Default is 0.days, meaning[m
+[32m+[m[32m  # the user cannot access the website without confirming their account.[m
+[32m+[m[32m  # config.allow_unconfirmed_access_for = 2.days[m
+[32m+[m
+[32m+[m[32m  # A period that the user is allowed to confirm their account before their[m
+[32m+[m[32m  # token becomes invalid. For example, if set to 3.days, the user can confirm[m
+[32m+[m[32m  # their account within 3 days after the mail was sent, but on the fourth day[m
+[32m+[m[32m  # their account can't be confirmed with the token any more.[m
+[32m+[m[32m  # Default is nil, meaning there is no restriction on how long a user can take[m
+[32m+[m[32m  # before confirming their account.[m
+[32m+[m[32m  # config.confirm_within = 3.days[m
+[32m+[m
+[32m+[m[32m  # If true, requires any email changes to be confirmed (exactly the same way as[m
+[32m+[m[32m  # initial account confirmation) to be applied. Requires additional unconfirmed_email[m
+[32m+[m[32m  # db field (see migrations). Until confirmed, new email is stored in[m
+[32m+[m[32m  # unconfirmed_email column, and copied to email column on successful confirmation.[m
+[32m+[m[32m  config.reconfirmable = true[m
+[32m+[m
+[32m+[m[32m  # Defines which key will be used when confirming an account[m
+[32m+[m[32m  # config.confirmation_keys = [ :email ][m
+[32m+[m
+[32m+[m[32m  # ==> Configuration for :rememberable[m
+[32m+[m[32m  # The time the user will be remembered without asking for credentials again.[m
+[32m+[m[32m  # config.remember_for = 2.weeks[m
+[32m+[m
+[32m+[m[32m  # If true, extends the user's remember period when remembered via cookie.[m
+[32m+[m[32m  # config.extend_remember_period = false[m
+[32m+[m
+[32m+[m[32m  # Options to be passed to the created cookie. For instance, you can set[m
+[32m+[m[32m  # secure: true in order to force SSL only cookies.[m
+[32m+[m[32m  # config.rememberable_options = {}[m
+[32m+[m
+[32m+[m[32m  # ==> Configuration for :validatable[m
+[32m+[m[32m  # Range for password length.[m
+[32m+[m[32m  config.password_length = 8..128[m
+[32m+[m
+[32m+[m[32m  # Email regex used to validate email formats. It simply asserts that[m
+[32m+[m[32m  # one (and only one) @ exists in the given string. This is mainly[m
+[32m+[m[32m  # to give user feedback and not to assert the e-mail validity.[m
+[32m+[m[32m  # config.email_regexp = /\A[^@]+@[^@]+\z/[m
+[32m+[m
+[32m+[m[32m  # ==> Configuration for :timeoutable[m
+[32m+[m[32m  # The time you want to timeout the user session without activity. After this[m
+[32m+[m[32m  # time the user will be asked for credentials again. Default is 30 minutes.[m
+[32m+[m[32m  # config.timeout_in = 30.minutes[m
+[32m+[m
+[32m+[m[32m  # If true, expires auth token on session timeout.[m
+[32m+[m[32m  # config.expire_auth_token_on_timeout = false[m
+[32m+[m
+[32m+[m[32m  # ==> Configuration for :lockable[m
+[32m+[m[32m  # Defines which strategy will be used to lock an account.[m
+[32m+[m[32m  # :failed_attempts = Locks an account after a number of failed attempts to sign in.[m
+[32m+[m[32m  # :none            = No lock strategy. You should handle locking by yourself.[m
+[32m+[m[32m  # config.lock_strategy = :failed_attempts[m
+[32m+[m
+[32m+[m[32m  # Defines which key will be used when locking and unlocking an account[m
+[32m+[m[32m  # config.unlock_keys = [ :email ][m
+[32m+[m
+[32m+[m[32m  # Defines which strategy will be used to unlock an account.[m
+[32m+[m[32m  # :email = Sends an unlock link to the user email[m
+[32m+[m[32m  # :time  = Re-enables login after a certain amount of time (see :unlock_in below)[m
+[32m+[m[32m  # :both  = Enables both strategies[m
+[32m+[m[32m  # :none  = No unlock strategy. You should handle unlocking by yourself.[m
+[32m+[m[32m  # config.unlock_strategy = :both[m
+[32m+[m
+[32m+[m[32m  # Number of authentication tries before locking an account if lock_strategy[m
+[32m+[m[32m  # is failed attempts.[m
+[32m+[m[32m  # config.maximum_attempts = 20[m
+[32m+[m
+[32m+[m[32m  # Time interval to unlock the account if :time is enabled as unlock_strategy.[m
+[32m+[m[32m  # config.unlock_in = 1.hour[m
+[32m+[m
+[32m+[m[32m  # Warn on the last attempt before the account is locked.[m
+[32m+[m[32m  # config.last_attempt_warning = false[m
+[32m+[m
+[32m+[m[32m  # ==> Configuration for :recoverable[m
+[32m+[m[32m  #[m
+[32m+[m[32m  # Defines which key will be used when recovering the password for an account[m
+[32m+[m[32m  # config.reset_password_keys = [ :email ][m
+[32m+[m
+[32m+[m[32m  # Time interval you can reset your password with a reset password key.[m
+[32m+[m[32m  # Don't put a too small interval or your users won't have the time to[m
+[32m+[m[32m  # change their passwords.[m
+[32m+[m[32m  config.reset_password_within = 6.hours[m
+[32m+[m
+[32m+[m[32m  # ==> Configuration for :encryptable[m
+[32m+[m[32m  # Allow you to use another encryption algorithm besides bcrypt (default). You can use[m
+[32m+[m[32m  # :sha1, :sha512 or encryptors from others authentication tools as :clearance_sha1,[m
+[32m+[m[32m  # :authlogic_sha512 (then you should set stretches above to 20 for default behavior)[m
+[32m+[m[32m  # and :restful_authentication_sha1 (then you should set stretches to 10, and copy[m
+[32m+[m[32m  # REST_AUTH_SITE_KEY to pepper).[m
+[32m+[m[32m  #[m
+[32m+[m[32m  # Require the `devise-encryptable` gem when using anything other than bcrypt[m
+[32m+[m[32m  # config.encryptor = :sha512[m
+[32m+[m
+[32m+[m[32m  # ==> Scopes configuration[m
+[32m+[m[32m  # Turn scoped views on. Before rendering "sessions/new", it will first check for[m
+[32m+[m[32m  # "users/sessions/new". It's turned off by default because it's slower if you[m
+[32m+[m[32m  # are using only default views.[m
+[32m+[m[32m  # config.scoped_views = false[m
+[32m+[m
+[32m+[m[32m  # Configure the default scope given to Warden. By default it's the first[m
+[32m+[m[32m  # devise role declared in your routes (usually :user).[m
+[32m+[m[32m  # config.default_scope = :user[m
+[32m+[m
+[32m+[m[32m  # Set this configuration to false if you want /users/sign_out to sign out[m
+[32m+[m[32m  # only the current scope. By default, Devise signs out all scopes.[m
+[32m+[m[32m  # config.sign_out_all_scopes = true[m
+[32m+[m
+[32m+[m[32m  # ==> Navigation configuration[m
+[32m+[m[32m  # Lists the formats that should be treated as navigational. Formats like[m
+[32m+[m[32m  # :html, should redirect to the sign in page when the user does not have[m
+[32m+[m[32m  # access, but formats like :xml or :json, should return 401.[m
+[32m+[m[32m  #[m
+[32m+[m[32m  # If you have any extra navigational formats, like :iphone or :mobile, you[m
+[32m+[m[32m  # should add them to the navigational formats lists.[m
