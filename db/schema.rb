@@ -16,7 +16,7 @@ ActiveRecord::Schema.define(version: 20140611183614) do
   create_table "dogs", force: true do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "name"
+    t.string   "name", 								null: false
     t.string   "breed"
     t.string   "image_url"
     t.integer  "age"
