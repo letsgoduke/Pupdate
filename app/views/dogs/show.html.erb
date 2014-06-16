@@ -1,3 +1,21 @@
-<h1>List of Dogs</h1>
+<h1><%= @dog.name %></h1>
 
-<%= @dogs.first.name %>
+<table>
+	<thead>
+		<tr>
+			<td>Time</td>
+			<td>Walker</td>
+			<td>#1?</td>
+			<td>#2?</td>
+		</tr>
+	</thead>
+
+	<% @dog.walks.each do |walk| %>
+		<tr>
+			<td><%= walk.created_at %></td>
+			<td><%= walk.walker.email %></td>
+			<td><%= walk.flag_1 %></td>
+			<td><%= walk.flag_2 %></td>
+		</tr>
+	<% end %>
+</table>
