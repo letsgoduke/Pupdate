@@ -13,7 +13,10 @@
 		<tr>
 			<td><%= d.name %></td>
 			<td><%= d.breed %></td>
+			<td><%= d.id %></td>
 			<td><%= link_to 'Details', dog_path(d.id) %></td>
+			<td><%= link_to 'Edit', edit_dog_path(d.id) %></td>
+			<td><%= button_to 'Delete', d, :method => :delete %></td>
 		</tr>
 	<% end %>
 </table>

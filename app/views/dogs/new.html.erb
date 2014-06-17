@@ -1,0 +1,5 @@
+<%= form_for @dog, url: {action: "create"} do |f| %>
+  <%= f.text_field :name %>
+  <%= f.text_field :breed %>
+  <%= f.submit "Create" %>
+<% end %>
