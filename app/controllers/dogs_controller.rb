@@ -9,7 +9,17 @@ class DogsController < ApplicationController
 		@dog = Dog.new
 	end
 	
+	def update
+		@dog = Dog.find params[:id]
+		if @dog.update(dog_params)
+			redirect_to dogs_path
+		else
+			render :action => :edit
+		end
+	end
+	
 	def edit
+		@dog = Dog.find params[:id]
 	end
 	
 	def destroy
