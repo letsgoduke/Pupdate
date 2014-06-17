@@ -1,0 +1,7 @@
+<%= form_for @walk, url: {action: "create"} do |f| %>
+  <%= f.label "Number 1?" %>
+  <%= f.check_box :flag_1 %>  <br />
+  <%= f.label "Number 2?" %>
+  <%= f.check_box :flag_2 %>  <br />
+  <%= f.submit "Create" %>
+<% end %>

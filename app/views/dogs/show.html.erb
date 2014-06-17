@@ -16,6 +16,11 @@
 			<td><%= walk.walker.email %></td>
 			<td><%= walk.flag_1 %></td>
 			<td><%= walk.flag_2 %></td>
+			<td><%= link_to "Details", walk_path(walk.id) %></td>
+			<td><%= button_to "Delete", walk, :method => :delete %>
 		</tr>
 	<% end %>
 </table>
+
+<br/>
+<%= link_to "Add New Walk", new_walk_path %>

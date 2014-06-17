@@ -11,12 +11,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140611183614) do
+ActiveRecord::Schema.define(version: 20140617195116) do
 
   create_table "dogs", force: true do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "name", 								null: false
+    t.string   "name"
     t.string   "breed"
     t.string   "image_url"
     t.integer  "age"
@@ -36,6 +36,7 @@ ActiveRecord::Schema.define(version: 20140611183614) do
     t.string   "last_sign_in_ip"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "name"
   end
 
   add_index "walkers", ["email"], name: "index_walkers_on_email", unique: true

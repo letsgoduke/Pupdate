@@ -1,2 +1,21 @@
 <h1>List of Walks</h1>
 
+<table>
+	<thead>
+		<tr>
+			<td>Time</td>
+			<td>Dog</td>
+			<td>Walker</td>
+		</tr>
+	</thead>
+
+	<% @walks.each do |w| %>
+		<tr>
+			<td><%= w.created_at %></td>
+			<td><%= w.walker.email %></td>
+			<td><%= link_to 'Details', walk_path(w.id) %></td>
+			<td><%= link_to 'Edit', edit_walk_path(w.id) %></td>
+			<td><%= button_to 'Delete', w, :method => :delete %></td>
+		</tr>
+	<% end %>
+</table>

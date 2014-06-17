@@ -35,7 +35,7 @@ class DogsController < ApplicationController
 	def index
 		@dogs = Dog.all
 	end
-
+	
 	private
 
 		def dog_params
